@@ -1,19 +1,7 @@
-import {
-  Admin,
-  DataProvider,
-  ListGuesser,
-  Resource,
-  ShowGuesser,
-} from "react-admin";
-import jsonServerProvider from "ra-data-json-server";
-import { PillsTable } from "./components/Pills.tsx";
-import { Dataset, Timeline } from "@mui/icons-material";
-import { Dashboard } from "./components/Dashboard.tsx";
-import { authProvider } from "./authProvider.tsx";
-
-const dataProvider: DataProvider = jsonServerProvider(
-  "https://jsonplaceholder.typicode.com",
-);
+import { Admin, Resource } from "react-admin";
+import { Dataset } from "@mui/icons-material";
+import { authProvider, dataProvider } from "./providers";
+import { AppBarLayout, Dashboard, PillsTable } from "./components";
 
 export const App = () => {
   return (
@@ -22,14 +10,26 @@ export const App = () => {
       authProvider={authProvider}
       dataProvider={dataProvider}
       dashboard={Dashboard}
+      layout={AppBarLayout}
     >
       <Resource
-        name="users"
+        name="pills/Zdravcity"
         list={PillsTable}
-        show={ShowGuesser}
         icon={Dataset}
+        options={{ label: "Zdravcity" }}
       />
-      <Resource name="posts" list={ListGuesser} icon={Timeline} />
+      <Resource
+        name="pills/Aptekaru"
+        list={PillsTable}
+        icon={Dataset}
+        options={{ label: "Aptekaru" }}
+      />
+      <Resource
+        name="pills/Eapteka"
+        list={PillsTable}
+        icon={Dataset}
+        options={{ label: "Eapteka" }}
+      />
     </Admin>
   );
 };

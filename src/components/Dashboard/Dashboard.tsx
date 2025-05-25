@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@mui/material";
 
-export const Dashboard = () => {
+const Dashboard = () => {
   return (
     <Card>
       <CardHeader title="Добро пожаловать в pills_parser" />
@@ -8,3 +8,5 @@ export const Dashboard = () => {
     </Card>
   );
 };
+
+export default Dashboard;
