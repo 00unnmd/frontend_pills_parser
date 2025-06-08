@@ -1,10 +1,8 @@
-import { AppBar, Layout } from "react-admin";
-import { AppBarLayoutProps } from "./types";
+import { AppBar } from "react-admin";
+import { AppBarCustomProps } from "./types.ts";
 
-const AppBarCustom = () => <AppBar color="default" />;
+const AppBarCustom = (props: AppBarCustomProps) => (
+  <AppBar color="default" {...props} />
+);
 
-const AppBarLayout = (props: AppBarLayoutProps) => {
-  return <Layout appBar={AppBarCustom}>{props.children}</Layout>;
-};
-
-export default AppBarLayout;
+export default AppBarCustom;

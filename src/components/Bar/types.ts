@@ -1,3 +1,3 @@
-import { CoreLayoutProps } from "react-admin";
+import { AppBarProps } from "react-admin";
 
-export type AppBarLayoutProps = CoreLayoutProps;
+export type AppBarCustomProps = AppBarProps;
