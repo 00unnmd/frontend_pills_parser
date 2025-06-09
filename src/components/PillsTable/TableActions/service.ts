@@ -1,14 +1,16 @@
-import { useDataProvider, useNotify } from "react-admin";
+import { useDataProvider, useListContext, useNotify } from "react-admin";
 import { useCallback } from "react";
 import { ExportPillsButtonService } from "./types.ts";
-import { MyDataProvider } from "../../../providers/dataProvider.ts";
+import { AppDataProvider } from "../../../providers/data/dataProvider.ts";
 
 export const useExportPillsButton = (): ExportPillsButtonService => {
-  const dataProvider = useDataProvider<MyDataProvider>();
+  const dataProvider = useDataProvider<AppDataProvider>();
+  const { sort, filterValues, resource } = useListContext();
   const notify = useNotify();
 
   const handleExport = useCallback(async () => {
-    dataProvider.exportPillsXLSX().then((res) => {
+    const resName = resource.split("/")[1];
+    dataProvider.exportPillsXLSX(resName, sort, filterValues).then((res) => {
       const objUrl = window.URL.createObjectURL(res.blob);
       const link = document.createElement("a");
 
@@ -26,7 +28,7 @@ export const useExportPillsButton = (): ExportPillsButtonService => {
         notify("Экспорт успешно завершен!", { type: "success" });
       }, 1000);
     });
-  }, [notify]);
+  }, [notify, filterValues]);
 
   return { handleExport };
 };
