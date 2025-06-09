@@ -1,15 +1,23 @@
-import { DataProvider, fetchUtils } from "react-admin";
-import { API_URL } from "../utils/constants.ts";
-import { getAuthHeader } from "../utils/authHeader.ts";
-import { PillsOptions } from "../components/PillsTable/TableFilters/types.ts";
-import { ExportPillsXLSX } from "../types/export-xlsx.ts";
+import { DataProvider, fetchUtils, SortPayload } from "react-admin";
+import { API_URL } from "../../utils/constants.ts";
+import { getAuthHeader } from "../../utils/authHeader.ts";
+import {
+  PillsOptions,
+  PillsTableFilter,
+} from "../../components/PillsTable/TableFilters/types.ts";
+import { ExportPillsXLSX } from "../../types/export-xlsx.ts";
+import { getParametersStr } from "./get-parameters.ts";
 
-export interface MyDataProvider extends DataProvider {
+export interface AppDataProvider extends DataProvider {
   getPillsOptions: () => Promise<PillsOptions>;
-  exportPillsXLSX: () => Promise<ExportPillsXLSX>;
+  exportPillsXLSX: (
+    resourceName: string,
+    sort: SortPayload,
+    filter: PillsTableFilter,
+  ) => Promise<ExportPillsXLSX>;
 }
 
-const dataProvider: MyDataProvider = {
+const dataProvider: AppDataProvider = {
   async getList(resource, params) {
     const { pagination, sort, filter } = params;
     const query = {
@@ -18,20 +26,9 @@ const dataProvider: MyDataProvider = {
       sort: sort?.field ?? "createdAt",
       order: sort?.order ?? "DESC",
     };
-    const parameters = new URLSearchParams(query);
+    const parametersStr = getParametersStr(query, filter);
 
-    // preparing table params
-    Object.entries(filter).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach((item) => parameters.append(key, item));
-      } else {
-        if (typeof value === "string" && value.length) {
-          parameters.append(key, value);
-        }
-      }
-    });
-
-    const url = `${API_URL}/${resource}?${parameters.toString()}`;
+    const url = `${API_URL}/${resource}?${parametersStr}`;
     const options = {
       method: "GET",
       headers: getAuthHeader(),
@@ -78,8 +75,15 @@ const dataProvider: MyDataProvider = {
     }
   },
 
-  async exportPillsXLSX() {
-    const url = `${API_URL}/pills/export`;
+  async exportPillsXLSX(resourceName, sort, filter) {
+    const query = {
+      tableName: resourceName,
+      sort: sort?.field ?? "createdAt",
+      order: sort?.order ?? "DESC",
+    };
+    const parametersStr = getParametersStr(query, filter);
+
+    const url = `${API_URL}/pills/export?${parametersStr}`;
     const options = {
       method: "GET",
       headers: getAuthHeader(),

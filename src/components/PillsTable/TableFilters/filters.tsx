@@ -8,13 +8,13 @@ import {
   useStore,
 } from "react-admin";
 import { useEffect, useState } from "react";
-import { MyDataProvider } from "../../../providers/dataProvider.ts";
 import {
   PillsOptions,
   PillsOptionsItem,
   PillsTableFiltersService,
 } from "./types.ts";
 import { Nullable } from "../../../types/utils.ts";
+import { AppDataProvider } from "../../../providers/data/dataProvider.ts";
 
 const pillsTableSort: SortPayload = {
   field: "createdAt",
@@ -24,7 +24,7 @@ const optionsDefaultValue: Nullable<PillsOptions> = null;
 
 export const usePillsTableFilters = (): PillsTableFiltersService => {
   const { authenticated } = useAuthState();
-  const dataProvider = useDataProvider<MyDataProvider>();
+  const dataProvider = useDataProvider<AppDataProvider>();
   const resource = useResourceContext();
   const [options, setOptions] = useStore<Nullable<PillsOptions>>(
     "options",
