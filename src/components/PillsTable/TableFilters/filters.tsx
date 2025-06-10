@@ -33,6 +33,11 @@ export const usePillsTableFilters = (): PillsTableFiltersService => {
   const [currentResOptions, setCurrentResOptions] =
     useState<PillsOptionsItem>();
 
+  /*
+  TODO [PLPR-15] проблема с получением новых селект-опций с сервера.
+   Если опции уже получены, запрос пропускается, новые опции не отображаются.
+   Нужно будет сменить логику для версии v1.2, когда парсинг будет запускаться с клиента
+  */
   useEffect(() => {
     if (!resource || !authenticated) {
       return;

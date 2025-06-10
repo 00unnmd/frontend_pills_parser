@@ -9,7 +9,13 @@ export const usePillsTableService = (): PillsTableService => {
 
   const renderCreationDate = (record: ParsedItem): string => {
     const dateObj = new Date(record.createdAt);
-    return dateObj.toLocaleDateString();
+
+    return dateObj.toLocaleDateString("ru-RU", {
+      timeZone: "UTC",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
   const renderPharmacy = (record: ParsedItem): string => {
     return ParsedPharmacies[record.pharmacy];
