@@ -43,9 +43,7 @@ const dataProvider: AppDataProvider = {
       return Promise.resolve(response.json);
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message || "Ошибка сети");
-      } else {
-        throw new Error(`getPillsList unknown err: ${error}`);
+        throw error;
       }
     }
   },
@@ -68,9 +66,7 @@ const dataProvider: AppDataProvider = {
       return Promise.resolve(response.json);
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message || "Ошибка сети");
-      } else {
-        throw new Error(`getPillsOptions unknown err ${error}`);
+        throw error;
       }
     }
   },
@@ -108,7 +104,7 @@ const dataProvider: AppDataProvider = {
       });
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message || "Ошибка сети");
+        throw error;
       } else {
         throw new Error(`exportPillsXLSX export failed: ${error}`);
       }
