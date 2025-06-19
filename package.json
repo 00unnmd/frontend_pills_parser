@@ -14,6 +14,8 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
+    "ra-i18n-polyglot": "^5.8.4",
+    "ra-language-russian": "^5.4.4",
     "react": "^19.0.0",
     "react-admin": "^5.8.0",
     "react-dom": "^19.0.0",

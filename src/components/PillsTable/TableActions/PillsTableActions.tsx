@@ -15,7 +15,7 @@ export const PillsTableActions = (props: PillsTableActionsProps) => {
       <FilterButton size="medium" />
       <SelectColumnsButton preferenceKey={props.datagridKey} size="medium" />
       <ExportButton
-        label="SAVE_XLSX"
+        label="Сохранить .xlsx"
         size="medium"
         exporter={exportService.handleExport}
       />
