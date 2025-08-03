@@ -1,11 +1,11 @@
 import {
+  ResourceContextValue,
   SelectArrayInput,
   SortPayload,
   TextInput,
   useAuthState,
   useDataProvider,
   useResourceContext,
-  useStore,
 } from "react-admin";
 import { useEffect, useState } from "react";
 import {
@@ -13,46 +13,46 @@ import {
   PillsOptionsItem,
   PillsTableFiltersService,
 } from "./types.ts";
-import { Nullable } from "../../../types/utils.ts";
 import { AppDataProvider } from "../../../providers/data/dataProvider.ts";
 
 const pillsTableSort: SortPayload = {
   field: "createdAt",
   order: "DESC",
 };
-const optionsDefaultValue: Nullable<PillsOptions> = null;
 
 export const usePillsTableFilters = (): PillsTableFiltersService => {
   const { authenticated } = useAuthState();
   const dataProvider = useDataProvider<AppDataProvider>();
   const resource = useResourceContext();
-  const [options, setOptions] = useStore<Nullable<PillsOptions>>(
-    "options",
-    optionsDefaultValue,
-  );
-  const [currentResOptions, setCurrentResOptions] =
+  const [currentResOptions, _setCurrentResOptions] =
     useState<PillsOptionsItem>();
 
-  /*
-  TODO [PLPR-15] проблема с получением новых селект-опций с сервера.
-   Если опции уже получены, запрос пропускается, новые опции не отображаются.
-   Нужно будет сменить логику для версии v1.2, когда парсинг будет запускаться с клиента
-  */
   useEffect(() => {
     if (!resource || !authenticated) {
       return;
     }
 
-    if (!options) {
-      dataProvider.getPillsOptions().then(setOptions);
+    const pillsOptions = sessionStorage.getItem("pillsOptions");
+    if (!pillsOptions) {
+      dataProvider.getPillsOptions().then((options) => {
+        setCurrentResOptions(resource, options);
+        sessionStorage.setItem("pillsOptions", JSON.stringify(options));
+      });
     } else {
-      const resName = resource.split("/")[1] as keyof PillsOptions;
-
-      if (resName in options) {
-        setCurrentResOptions(options[resName]);
-      }
+      const parsedPillsOptions = JSON.parse(pillsOptions) as PillsOptions;
+      setCurrentResOptions(resource, parsedPillsOptions);
     }
-  }, [resource, options, authenticated]);
+  }, [resource, authenticated]);
+
+  const setCurrentResOptions = (
+    resource: ResourceContextValue,
+    options: PillsOptions,
+  ) => {
+    const resName = resource!.split("/")[1] as keyof PillsOptions;
+    if (resName in options) {
+      _setCurrentResOptions(options[resName]);
+    }
+  };
 
   return {
     pillsTableSort,
